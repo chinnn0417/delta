@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <title>三角洲通知模擬器</title>
+    <link rel="stylesheet" href="./style.css">
+
+  </head>
+    
+  <body>
+  <!DOCTYPE html>
+<html lang="zh-TW">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>三角洲通知模擬器</title>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    
+    <style>
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        background-color: #121212;
+        color: #ffffff;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 20px;
+        margin: 0;
+        box-sizing: border-box;
+      }
+
+      h1 {
+        font-size: 1.5rem;
+        margin-bottom: 20px;
+      }
+
+      /* 響應式主容器 */
+      .editor-container {
+        position: relative;
+        width: 100%;       
+        max-width: 400px;  
+        height: auto;
+        border-radius: 0px;
+        overflow: hidden;
+        box-shadow: none;
+      }
+
+      .editor-container img {
+        display: block;
+        width: 100%;
+        height: auto;
+      }
+
+      /* 1. 通知主結構：拿掉背景色，改用百分比定位 */
+      .notification-overlay {
+        padding-top: 10%;
+        position: absolute;
+        
+        /* ↓↓↓ 請依圖片微調這兩個數值，讓它對準通知欄的文字區域 ↓↓↓ */
+        top: 20%;          
+        left: 4%;         
+        width: 90%;        
+        
+        display: flex;
+        flex-direction: column;
+        gap: 62px; /* 控制通知內容與下方按鈕之間的間距 */
+        box-sizing: border-box;
+      }
+
+      /* 2. 通用透明輸入框設定 */
+      .transparent-input {
+        width: 100%;
+        border: none;
+        background: transparent;
+        color: #ffffff;    /* 預設只有白色文字 */
+        outline: none;
+        box-sizing: border-box;
+        font-family: inherit;
+      }
+
+      /* 主要通知文字 */
+      .main-content-input {
+        font-size: 16px;   /* 防止 iOS 自動放大，且適合主文本 */
+        font-weight: 500;
+        text-align: center;
+      }
+
+      /* 3. 下方兩個按鈕的水平容器 */
+      .action-buttons-container {
+        display: flex;
+        width: 100%;
+        justify-content: center;
+        gap: 6%;
+      }
+
+      /* 左右各佔將近一半的輸入標籤 */
+      .action-input {
+        display: inline-block; /* 讓 span 可以正常套用寬度 */
+        width: 45%;
+        font-size: 16px;
+        font-weight: bold;
+        text-align: center; /* 讓「是/否」文字置中顯示 */
+        padding: 5px 0;
+      }
+
+      /* 適合手機點擊的大按鈕 */
+      .download-btn {
+        width: 100%;
+        max-width: 400px;
+        margin-top: 20px;
+        padding: 14px;     
+        background-color: #007bff;
+        color: white;
+        border: none;
+        border-radius: 8px;
+        font-size: 16px;
+        font-weight: bold;
+        cursor: pointer;
+        box-sizing: border-box;
+        -webkit-tap-highlight-color: transparent;
+      }
+      
+      .download-btn:active {
+        background-color: #0056b3;
+      }
+    </style>
+  </head>
+  <body>
+
+    <h1>三角洲通知模擬器</h1>
+
+    <div id="captureArea" class="editor-container">
+      <img src="https://chinnn0417.github.io/black.png" alt="背景圖" crossorigin="anonymous">
+      
+      <div class="notification-overlay">
+        
+        <input type="text" class="transparent-input main-content-input" value="這裡輸入通知內容">
+        
+        <div class="action-buttons-container">
+          <span contenteditable="true" class="transparent-input action-input">否</span>
+          
+          <span contenteditable="true" class="transparent-input action-input" style="color: #2ecc71;">是</span>
+        </div>
+
+      </div>
+    </div>
+
+    <button class="download-btn" id="downloadBtn">儲存圖片到手機</button>
+
+    <script>
+      document.getElementById('downloadBtn').addEventListener('click', function() {
+        const captureArea = document.getElementById('captureArea');
+        const btn = document.getElementById('downloadBtn');
+        const originalText = btn.innerText;
+        
+        btn.innerText = '圖片生成中...';
+        btn.disabled = true;
+
+        html2canvas(captureArea, {
+          useCORS: true,
+          scale: 3, 
+          logging: false,
+          backgroundColor: null
+        }).then(canvas => {
+          const image = canvas.toDataURL('image/png');
+          const link = document.createElement('a');
+          link.href = image;
+          link.download = 'delta-notification.png';
+          
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+          
+          btn.innerText = originalText;
+          btn.disabled = false;
+        }).catch(error => {
+          console.error('生成失敗:', error);
+          alert('圖片生成失敗');
+          btn.innerText = originalText;
+          btn.disabled = false;
+        });
+      });
+    </script>
+  </body>
+</html>
+    
+  </body>
+  
+</html>
